@@ -1,33 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect } from 'react'
 import './App.css'
+import AnalysisPage from './views/AnalysisPage/AnalysisPage.jsx'
+import Papa from 'papaparse';
+
+import { UserStore } from "./store/UserStore.js";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const setLoaded = UserStore((state) => state.setLoaded);
+
+  // load data
+
+  useEffect(() => {
+    async function getData() {
+        const response = await fetch("/public/240826_total_1296_0.csv");
+        const reader = response.body.getReader();
+        const result = await reader.read(); // raw array
+        const decoder = new TextDecoder("utf-8");
+        const csv = decoder.decode(result.value); // the csv text
+        const results = Papa.parse(csv, { header: true }); // object with { data, errors, meta }
+        const rows = results.data; // array of objects
+        console.log(rows);
+        setLoaded(rows);
+    }
+    getData();
+}, []);
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <AnalysisPage />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
