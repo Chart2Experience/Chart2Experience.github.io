@@ -7,6 +7,7 @@ import { UserStore } from "./store/UserStore.js";
 
 function App() {
   const setLoaded = UserStore((state) => state.setLoaded);
+  const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
   // load data
 
@@ -19,10 +20,23 @@ function App() {
         const csv = decoder.decode(result.value); // the csv text
         const results = Papa.parse(csv, { header: true }); // object with { data, errors, meta }
         const rows = results.data; // array of objects
-        console.log(rows);
         setLoaded(rows);
     }
+
+    async function getMeanData() {
+      const response = await fetch("/public/mean_ignorenan.csv");
+      const reader = response.body.getReader();
+      const result = await reader.read(); // raw array
+      const decoder = new TextDecoder("utf-8");
+      const csv = decoder.decode(result.value); // the csv text
+      const results = Papa.parse(csv, { header: true }); // object with { data, errors, meta }
+      const rows = results.data; // array of objects
+      console.log(rows);
+      setLoadedMean(rows);
+  }
+
     getData();
+    getMeanData();
 }, []);
 
   return (

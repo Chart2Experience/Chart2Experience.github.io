@@ -1,6 +1,8 @@
 import { React, useEffect } from "react";
 import { BarChart } from '@mui/x-charts/BarChart';
 
+import ChartsView from "./ChartsView.jsx";
+
 import "./AnalysisPage.scss";
 import { UserStore, CATS, CATS_WHY } from "../../store/UserStore.js";
 
@@ -51,86 +53,7 @@ const AnalysisPage = () => {
 
   return (
     <div className="vertical">
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/COVID-" + (index + 1) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("COVID-" + (index + 1));
-              }}
-            /></div>
-          );
-        })}
-      </div>
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/COVID-" + (index + 7) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("COVID-" + (index + 7));
-              }}
-            /></div>
-          );
-        })}
-      </div>
-      <div className="hliner" />
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/GlobalWarming-" + (index + 1) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("GlobalWarming-" + (index + 1));
-              }}
-            /></div>
-          );
-        })}
-      </div>
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/GlobalWarming-" + (index + 7) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("GlobalWarming-" + (index + 7));
-              }}
-            /></div>
-          );
-        })}
-      </div>
-      <div className="hliner" />
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/HousePrice-" + (index + 1) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("HousePrice-" + (index + 1));
-              }}
-            /></div>
-          );
-        })}
-      </div>
-      <div className="imagerow">
-        {[...Array(6).keys()].map((item, index) => {
-          return (
-            <div className="imageWrapper"><img
-              src={"/HousePrice-" + (index + 7) + ".png"}
-              className="logo"
-              onClick={() => {
-                setCurrentImage("HousePrice-" + (index + 7));
-              }}
-            /></div>
-          );
-        })}
-      </div>
+      <ChartsView />
       <div className="hliner" />
       <div className="imagerow">
         {

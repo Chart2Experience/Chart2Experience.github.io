@@ -1,11 +1,12 @@
 import { create } from "zustand";
 
+export const SORTS = ["default", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS_WHY = ["int-why", "mem-why", "tru-why", "emp-why", "aes-why", "itt-why", "cft-why"]
 
 export const UserStore = create((set, get) => ({
   // timer for each chart
-  sortBy: 0,
+  sortBy: "default",
   setSortBy: (n) => set({ sortBy: n }),
 
   currentImage: 0,
@@ -20,4 +21,8 @@ export const UserStore = create((set, get) => ({
   // data
   loaded: null,
   setLoaded: (file) => set({ loaded: file }),
+
+  // data
+  loadedMean: null,
+  setLoadedMean: (file) => set({ loadedMean: file }),
 }));
