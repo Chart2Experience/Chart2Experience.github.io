@@ -12,6 +12,7 @@ const ChartsView = () => {
   const setCurrentImage = UserStore((state) => state.setCurrentImage);
 
   const loadedMean = UserStore((state) => state.loadedMean);
+  const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
   return (
     <div className="vertical">
@@ -23,6 +24,7 @@ const ChartsView = () => {
                 className="sortButton"
                 onClick={() => {
                   setSortBy(item);
+                  setLoadedMean(loadedMean.sort((a, b) => b[item] - a[item]))
                 }}
               >
                 {item}
@@ -31,120 +33,67 @@ const ChartsView = () => {
           })
         }
       </div>
-
-      {sortBy == "default" ?
-        <>
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
+      <div className="imagerow">
+        {sortBy == "default" ?<div className="imagecol">
+            {[...Array(12).keys()].map((item, index) => {
               return (
-                <div className="imageWrapper"><img
-                  src={"/COVID-" + (index + 1) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("COVID-" + (index + 1));
-                  }}
-                /></div>
+                <div className="imagerow">
+                  <div className="imageWrapper">
+                    <img
+                      className="thumbnail"
+                      src={"/COVID-" + (index + 1) + ".png"}
+                      onClick={() => {
+                        setCurrentImage("COVID-" + (index + 1));
+                      }}
+                    />
+                  </div>
+                  <div className="imageWrapper">
+                    <img
+                      className="thumbnail"
+                      src={"/GlobalWarming-" + (index + 1) + ".png"}
+                      onClick={() => {
+                        setCurrentImage("GlobalWarming-" + (index + 1));
+                      }}
+                    />
+                  </div>
+                  <div className="imageWrapper">
+                    <img
+                      className="thumbnail"
+                      src={"/HousePrice-" + (index + 1) + ".png"}
+                      onClick={() => {
+                        setCurrentImage("HousePrice-" + (index + 1));
+                      }}
+                    />
+                  </div>
+                </div>
               );
-            })}
-          </div>
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
-              return (
-                <div className="imageWrapper"><img
-                  src={"/COVID-" + (index + 7) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("COVID-" + (index + 7));
-                  }}
-                /></div>
-              );
-            })}
-          </div>
-          <div className="hliner" />
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
-              return (
-                <div className="imageWrapper"><img
-                  src={"/GlobalWarming-" + (index + 1) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("GlobalWarming-" + (index + 1));
-                  }}
-                /></div>
-              );
-            })}
-          </div>
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
-              return (
-                <div className="imageWrapper"><img
-                  src={"/GlobalWarming-" + (index + 7) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("GlobalWarming-" + (index + 7));
-                  }}
-                /></div>
-              );
-            })}
-          </div>
-          <div className="hliner" />
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
-              return (
-                <div className="imageWrapper"><img
-                  src={"/HousePrice-" + (index + 1) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("HousePrice-" + (index + 1));
-                  }}
-                /></div>
-              );
-            })}
-          </div>
-          <div className="imagerow">
-            {[...Array(6).keys()].map((item, index) => {
-              return (
-                <div className="imageWrapper"><img
-                  src={"/HousePrice-" + (index + 7) + ".png"}
-                  className="logo"
-                  onClick={() => {
-                    setCurrentImage("HousePrice-" + (index + 7));
-                  }}
-                /></div>
-              );
-            })}
-          </div>
-        </> :
-        <BarChart
-          onItemClick={(e, item) => {
-            console.log(loadedMean);
-            setCurrentImage(loadedMean[item.dataIndex].chart_name);
-          }}
-          dataset={loadedMean.sort((a, b) => b[sortBy] - a[sortBy])}
-          xAxis={[{ scaleType: 'band', dataKey: 'chart_name', valueFormatter: (v) => (v === null ? '' : v) }]}
-          yAxis={[
-            {
-              min: 0,
-              max: 7,
-              tickNumber: 7,
-            }
-          ]}
-          grid={{
-            horizontal: true,
-          }}
-          series={[{ dataKey: sortBy }]}
-          width={1200}
-          height={500}
-          bottomAxis={{
-            tickLabelStyle: {
-              angle: 45,
-              textAnchor: 'start',
-              fontSize: 12,
-            },
-          }}
-          tooltip={{ trigger: 'axis' }}
-        />
-      }
+            })}</div>
+           :
+          <BarChart
+            onItemClick={(e, item) => {
+              setCurrentImage(loadedMean[item.dataIndex].chart_name);
+            }}
+            dataset={loadedMean}
+            yAxis={[{ scaleType: 'band', dataKey: 'chart_name' }]}
+            xAxis={[{ min: 0, max: 7, tickNumber: 7, }]}
+            grid={{ vertical: true, }}
+            series={[{ dataKey: sortBy, valueFormatter: (v) => v.toFixed(2) }]}
+            width={400}
+            height={500}
+            leftAxis={{ tickLabelStyle: { fontSize: 10, } }}
+            layout="horizontal"
+            margin={{ left: 120, }}
+          />
+        }
+        <div style={{
+          display: "flex",
+          width: "calc(100% - 400px)",
+          alignItems: "center",
+          justifyContent: "center",
+          }}>
+          <img src={"/" + currentImage + ".png"} />
+        </div>
+      </div>
     </div>
   );
 };

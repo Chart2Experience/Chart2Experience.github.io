@@ -19,7 +19,7 @@ const getAVGofAttributes = (fullData, currentImage) => {
     }, 0) / count
   });
 
-  console.log(dataWithChartname, avgs)
+  // console.log(dataWithChartname, avgs)
   return avgs
 }
 
@@ -34,7 +34,7 @@ const getCountinAttribute = (fullData, currentImage, currentAttribute) => {
 const getWHYofAttributes = (fullData, currentImage, currentAttribute, currentScore) => {
   const dataWithChartname = fullData.filter((e) => e.chart_name == currentImage);
   const selectedWhy = dataWithChartname.map((e) => [e[currentAttribute], e[currentAttribute + "-why"]]);
-  console.log(currentAttribute, selectedWhy)
+  // console.log(currentAttribute, selectedWhy)
   const sorted = selectedWhy.sort((a, b) => {
     return a[0] - b[0];
   });
@@ -58,11 +58,10 @@ const AnalysisPage = () => {
       <div className="imagerow">
         {
           currentImage != 0 ?
-            <div className="chartWrapper">
-              <img src={"/" + currentImage + ".png"} />
+            <div>
               <BarChart
                 onItemClick={(e, item) => {
-                  console.log(item);
+                  // console.log(item);
                   setCurrentAttribute(CATS[item.dataIndex]);
                 }}
                 xAxis={[
@@ -101,7 +100,7 @@ const AnalysisPage = () => {
             <div className="whyWrapper">
               <BarChart
                 onItemClick={(e, item) => {
-                  console.log(item);
+                  // console.log(item);
                   setCurrentScore(item.dataIndex + 1);
                 }}
                 xAxis={[

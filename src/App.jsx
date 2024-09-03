@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     async function getData() {
-        const response = await fetch("/public/240826_total_1296_0.csv");
+        const response = await fetch("/240826_total_1296_0.csv");
         const reader = response.body.getReader();
         const result = await reader.read(); // raw array
         const decoder = new TextDecoder("utf-8");
@@ -24,13 +24,21 @@ function App() {
     }
 
     async function getMeanData() {
-      const response = await fetch("/public/mean_ignorenan.csv");
+      const response = await fetch("/mean_ignorenan.csv");
       const reader = response.body.getReader();
       const result = await reader.read(); // raw array
       const decoder = new TextDecoder("utf-8");
       const csv = decoder.decode(result.value); // the csv text
       const results = Papa.parse(csv, { header: true }); // object with { data, errors, meta }
       const rows = results.data; // array of objects
+      // parseFloat to all values except chart_name
+      rows.forEach((row) => {
+        Object.keys(row).forEach((key) => {
+          if (key != "chart_name") {
+            row[key] = parseFloat(row[key]);
+          }
+        });
+      });
       console.log(rows);
       setLoadedMean(rows);
   }

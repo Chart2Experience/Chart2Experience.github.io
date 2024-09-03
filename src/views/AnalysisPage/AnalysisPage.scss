@@ -2,13 +2,21 @@
   flex: 1 1 0px;
   border: 1px solid #000;
   width: 0;
-  height: 65px;
+  height: 45px;
+  overflow: hidden;
 }
 
-img {
+.thumbnail {
   object-fit: cover;
   width: 100%;
-  height: 65px; 
+  height: 45px; 
+}
+
+.imagecol {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  // height: 100%;
 }
 
 .imagerow {
@@ -16,18 +24,18 @@ img {
   display: flex;
   flex-direction: row;
   // justify-items: ;
-
-}
-
-.chartWrapper{
-  width: calc(100% - 400px);
-
+  
   img{
     object-fit: contain;
     max-height: 400px;
     // width: 100%;
     height: auto;
+    align-self: center;
   }
+}
+
+.chartWrapper{
+  width: calc(100% - 400px);
 }
 
 .whyWrapper{
