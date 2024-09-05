@@ -24,11 +24,9 @@ export const UserStore = create((set, get) => ({
   currentScore: 0,
   setCurrentScore: (score) => set({ currentScore: score }),
 
-  // data
   loaded: null,
   setLoaded: (file) => set({ loaded: file }),
 
-  // data
   loadedMean: null,
   setLoadedMean: (file) => set({ loadedMean: file }),
 
@@ -36,7 +34,7 @@ export const UserStore = create((set, get) => ({
   sortBy2: "default",
   setSortBy2: (n) => set({ sortBy2: n }),
 
-  bin: 0,
+  bin: null,
   setBin: (b) => set({ bin: b }),
 
 }));
