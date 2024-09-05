@@ -1,7 +1,7 @@
 import { React } from "react";
 import { BarChart } from '@mui/x-charts/BarChart';
 
-import "./AnalysisPage.scss";
+import "./GroundPage.scss";
 import { UserStore, SORTS, CATS, CATS_WHY } from "../../store/UserStore.js";
 
 const ChartsView = () => {
@@ -16,23 +16,6 @@ const ChartsView = () => {
 
   return (
     <div className="vertical">
-      <div>
-        {
-          SORTS.map((item, index) => {
-            return (
-              <button
-                className="sortButton"
-                onClick={() => {
-                  setSortBy(item);
-                  setLoadedMean(loadedMean.sort((a, b) => b[item] - a[item]))
-                }}
-              >
-                {item}
-              </button>
-            );
-          })
-        }
-      </div>
       <div className="imagerow">
         {sortBy == "default" ?<div className="imagecol">
             {[...Array(12).keys()].map((item, index) => {

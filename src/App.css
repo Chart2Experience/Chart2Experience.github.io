@@ -16,3 +16,10 @@
 #divstarter {
   width: 1280px;
 }
+
+.hliner{
+  width: 100%;
+  height: 0;
+  border: 1px dashed #CCC;
+  margin: 10px 0;
+}

@@ -3,46 +3,11 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 import ChartsView from "./ChartsView.jsx";
 
-import "./AnalysisPage.scss";
+import "./GroundPage.scss";
 import { UserStore, CATS, CATS_WHY } from "../../store/UserStore.js";
+import { getAVGofAttributes, getCountinAttribute, getWHYofAttributes } from "../../dataprocessing/utils.jsx";
 
-const getAVGofAttributes = (fullData, currentImage) => {
-  const dataWithChartname = fullData.filter((e) => e.chart_name == currentImage);
-  // get average of attributes
-  const avgs = CATS.map((cat) => {
-    let count = 0; // number of non-zero
-    return dataWithChartname.reduce((acc, e) => {
-      if (parseInt(e[cat]) > 0) {
-        count++;
-      }
-      return acc + parseInt(e[cat])
-    }, 0) / count
-  });
-
-  // console.log(dataWithChartname, avgs)
-  return avgs
-}
-
-const getCountinAttribute = (fullData, currentImage, currentAttribute) => {
-  const dataWithChartname = fullData.filter((e) => e.chart_name == currentImage);
-  const scoresSelected = dataWithChartname.map((e) => e[currentAttribute]);
-  return [...Array(7).keys()].map((item, index) =>
-    scoresSelected.filter(x => x == (item + 1)).length
-  );
-}
-
-const getWHYofAttributes = (fullData, currentImage, currentAttribute, currentScore) => {
-  const dataWithChartname = fullData.filter((e) => e.chart_name == currentImage);
-  const selectedWhy = dataWithChartname.map((e) => [e[currentAttribute], e[currentAttribute + "-why"]]);
-  // console.log(currentAttribute, selectedWhy)
-  const sorted = selectedWhy.sort((a, b) => {
-    return a[0] - b[0];
-  });
-  return (currentScore != 0 ? sorted.filter((e) => e[0] == parseInt(currentScore)) : sorted).map((e) => <div>{e[0]}: {e[1]}</div>);
-}
-
-const AnalysisPage = () => {
-  const setUserID = UserStore((state) => state.setUserID);
+const GroundPage = () => {
   const currentImage = UserStore((state) => state.currentImage);
   const setCurrentImage = UserStore((state) => state.setCurrentImage);
   const loaded = UserStore((state) => state.loaded);
@@ -139,4 +104,4 @@ const AnalysisPage = () => {
   );
 };
 
-export default AnalysisPage;
+export default GroundPage;
