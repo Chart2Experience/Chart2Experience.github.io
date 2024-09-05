@@ -1,7 +1,7 @@
 import { React } from "react";
 import { LineChart } from '@mui/x-charts/LineChart';
 
-import {ACCURACY} from "../../../public/accuracy.js";
+import {ACCURACY} from "../../../public/accuracy_bin2.js";
 import "./ComparisonPage.scss";
 import { UserStore, CATS } from "../../store/UserStore.js";
 import { getAVGofAttributes } from "../../dataprocessing/utils.jsx";
@@ -27,7 +27,14 @@ const ComparisonPage = () => {
           ]}
           
           yAxis={[{ min: 0, max: 1, tickNumber: 10, }]}
-          series={[{ dataKey: 'accuracy', label: 'Accuracy' }]}
+          series={[{ 
+            dataKey: 'accuracy', 
+            label: 'Accuracy', 
+            valueFormatter: (code, context) => {
+              let found = ACCURACY[sortBy2].find((d) => d.accuracy === code);
+              return `${found.correct}/${found.count} = ${code.toFixed(2)}`;
+            }
+          }]}
           width={1000}
           height={400}
           grid={{
