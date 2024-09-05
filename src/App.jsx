@@ -8,6 +8,7 @@ import { UserStore, TARGETS, SORTS } from "./store/UserStore.js";
 
 function App() {
   const setLoaded = UserStore((state) => state.setLoaded);
+  const loadedMean = UserStore((state) => state.loadedMean);
   const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
   const setSortBy = UserStore((state) => state.setSortBy);
