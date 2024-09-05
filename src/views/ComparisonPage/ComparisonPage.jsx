@@ -63,7 +63,7 @@ const ComparisonPage = () => {
                 {e[1]}
                 <img  src={"/" + e[1] + ".png"} />
               </div>
-              <div className="reason-comparison">Score Differece: {e[2].toFixed(2)} ({e[2]>0?"left":"right"} is higher)<br/>LLM predicted {e[3] == true?"well":"wrong"}<br/>{e[4].slice(2, -2)}</div>
+              <div className="reason-comparison">Score Difference: <span style={{color: e[2]>0?"orange":"blue"}}>{e[2].toFixed(2)}</span> ({e[2]>0?"left":"right"} is higher)<br/>LLM predicted {e[3] == true?"well":"wrong"}<br/>{e[4].slice(2, -2)}</div>
             </div>
           )
         })
