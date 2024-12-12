@@ -6,7 +6,7 @@ import { UserStore, CATS, CATS_FULL } from "../../store/UserStore.js";
 import { getAVGofAttributes, getCountinAttribute, getWHYofAttributes } from "../../utils/dataWrangling.jsx";
 import ChartSelector from './ChartSelector';
 
-const MODELS = ["Human", "ChatGPT", "Claude", "GPT4", "Llama2"];
+const MODELS = ["Human", "GPT4o", "llama", "sonnet_1", "sonnet_2"];
 
 const GroundPage = () => {
   const currentImage = UserStore((state) => state.currentImage);
