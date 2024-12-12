@@ -1,3 +1,7 @@
+html {
+  scrollbar-gutter: stable;
+}
+
 #root {
   height: 100%;
   max-width: 1280px;
@@ -26,12 +30,18 @@
 
 /* Button Group Styles */
 .button-group {
+  flex: 1;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+
+  .menu-button {
+    flex: 1;
+    white-space: nowrap;
+  }
 }
 
 .menu-button {
@@ -82,5 +92,25 @@
   .menu-button {
     padding: 6px 12px;
     font-size: 0.8rem;
+  }
+}
+
+.combined-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.button-group {
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+  
+  .menu-button {
+    flex: 1;
+    white-space: nowrap;
   }
 }

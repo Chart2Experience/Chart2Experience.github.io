@@ -1,18 +1,18 @@
 import { create } from "zustand";
 
-export const TARGETS = ["Absolute Score", "Pairwise Comparison"]
+export const TARGETS = ["Task 1: Absolute Score", "Task 2: Pairwise Comparison"]
 export const SORTS = ["default", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS_FULL = ["Interest", "Memorability", "Trustworthiness", "Empathy", "Aesthetic Pleasure", "Intuitiveness", "Comfort"]
 export const CATS_WHY = ["int-why", "mem-why", "tru-why", "emp-why", "aes-why", "itt-why", "cft-why"]
 
 export const UserStore = create((set, get) => ({
-  // timer for each chart
+  // Target
   target: "default",
   setTarget: (tar) => set({ target: tar }),
 
   
-  // GROUNDPAGE
+  // Absolute Score
   sortBy: "default",
   setSortBy: (n) => set({ sortBy: n }),
 
@@ -31,7 +31,7 @@ export const UserStore = create((set, get) => ({
   loadedMean: null,
   setLoadedMean: (file) => set({ loadedMean: file }),
 
-  // COMPARISONPAGE
+  // Pairwise Comparison
   sortBy2: "default",
   setSortBy2: (n) => set({ sortBy2: n }),
 
