@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 
 import "./GroundPage.scss";
 import { UserStore, CATS, CATS_FULL } from "../../store/UserStore.js";
-import { getAVGofAttributes, getCountinAttribute, getWHYofAttributes } from "../../utils/dataWrangling.jsx";
+import { getAVGofFactors, getCountinFactor, getWHYofFactors } from "../../utils/dataWrangling.jsx";
 import ChartSelector from './ChartSelector';
 
 const MODELS = ["Human", "GPT4o", "llama", "sonnet_1", "sonnet_2"];
@@ -11,29 +11,29 @@ const MODELS = ["Human", "GPT4o", "llama", "sonnet_1", "sonnet_2"];
 const GroundPage = () => {
   const currentImage = UserStore((state) => state.currentImage);
   const loaded = UserStore((state) => state.loaded);
-  const currentAttribute = UserStore((state) => state.currentAttribute);
-  const setCurrentAttribute = UserStore((state) => state.setCurrentAttribute);
+  const currentFactor = UserStore((state) => state.currentFactor);
+  const setCurrentFactor = UserStore((state) => state.setCurrentFactor);
   const currentScore = UserStore((state) => state.currentScore);
   const setCurrentScore = UserStore((state) => state.setCurrentScore);
   const currentModel = UserStore((state) => state.currentModel);
   const setCurrentModel = UserStore((state) => state.setCurrentModel);
 
-  const getAttributeColors = () => {
-    return CATS.map(cat => cat === currentAttribute ? '#007bff' : '#1f77b4');
+  const getFactorColors = () => {
+    return CATS.map(cat => cat === currentFactor ? '#007bff' : '#1f77b4');
   };
 
   const getScoreColors = () => {
     return [...Array(7).keys()].map(i => (i + 1) === currentScore ? '#007bff' : '#1f77b4');
   };
 
-  const handleAttributeClick = (data) => {
+  const handleFactorClick = (data) => {
     if (data.points && data.points[0]) {
-      const clickedAttribute = CATS[data.points[0].pointIndex];
-      if (clickedAttribute === currentAttribute) {
-        setCurrentAttribute(''); // Reset to default
-        setCurrentScore(0); // Also reset score when attribute is reset
+      const clickedFactor = CATS[data.points[0].pointIndex];
+      if (clickedFactor === currentFactor) {
+        setCurrentFactor(''); // Reset to default
+        setCurrentScore(0); // Also reset score when Factor is reset
       } else {
-        setCurrentAttribute(clickedAttribute);
+        setCurrentFactor(clickedFactor);
       }
     }
   };
@@ -85,11 +85,11 @@ const GroundPage = () => {
                         {
                           type: 'bar',
                           x: CATS,
-                          y: getAVGofAttributes(loaded, currentImage).map(v => Number(v).toFixed(2)),
-                          text: getAVGofAttributes(loaded, currentImage).map(v => Number(v).toFixed(2)),
+                          y: getAVGofFactors(loaded, currentImage, currentModel).map(v => Number(v).toFixed(2)),
+                          text: getAVGofFactors(loaded, currentImage, currentModel).map(v => Number(v).toFixed(2)),
                           textposition: 'auto',
                           marker: {
-                            color: getAttributeColors(),
+                            color: getFactorColors(),
                           },
                           hoverinfo: 'x+y',
                           hoverlabel: { cursor: 'pointer' },
@@ -98,7 +98,7 @@ const GroundPage = () => {
                       ]}
                       layout={{
                         title: {
-                          text: 'Average Scores byAttribute',
+                          text: 'Average Scores by Factor',
                           font: {
                             size: 14,
                             weight: 'bold'
@@ -134,7 +134,7 @@ const GroundPage = () => {
                         scrollZoom: false
                       }}
                       onClick={(data) => {
-                        handleAttributeClick(data);
+                        handleFactorClick(data);
                       }}
                     />
 
@@ -143,8 +143,8 @@ const GroundPage = () => {
                         {
                           type: 'bar',
                           x: [...Array(7).keys()].map(e => e + 1),
-                          y: getCountinAttribute(loaded, currentImage, currentAttribute).map(v => Number(v)),
-                          text: getCountinAttribute(loaded, currentImage, currentAttribute).map(v => Number(v)),
+                          y: getCountinFactor(loaded, currentImage, currentFactor, currentModel).map(v => Number(v)),
+                          text: getCountinFactor(loaded, currentImage, currentFactor, currentModel).map(v => Number(v)),
                           textposition: 'auto',
                           marker: {
                             color: getScoreColors(),
@@ -193,11 +193,11 @@ const GroundPage = () => {
                       onClick={handleScoreClick}
                     />
                   </div>
-                  <div className="attribute-title">
-                    {currentAttribute==''?'Select Attribute':'Attribute: '
-                    + CATS_FULL[CATS.indexOf(currentAttribute)]}  /  Score: {currentScore==0?'All':currentScore}</div>
+                  <div className="factor-title">
+                    {currentFactor==''?'Select Factor':'Factor: '
+                    + CATS_FULL[CATS.indexOf(currentFactor)]}  /  Score: {currentScore==0?'All':currentScore}</div>
                   <div className="explanation-text">
-                    {getWHYofAttributes(loaded, currentImage, currentAttribute, currentScore)}
+                    {getWHYofFactors(loaded, currentImage, currentFactor, currentScore, currentModel)}
                   </div>
                 </div>
               </>

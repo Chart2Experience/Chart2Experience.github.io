@@ -5,7 +5,7 @@ import { ACCURACY } from "../../../public/accuracy_bin2.js";
 import { ACCURACY_CASES } from "../../../public/accuracy_bin2_cases.js";
 import "./ComparisonPage.scss";
 import { UserStore, CATS } from "../../store/UserStore.js";
-import { getAVGofAttributes } from "../../dataprocessing/utils.jsx";
+import { getAVGofFactors } from "../../dataprocessing/utils.jsx";
 
 const ComparisonPage = () => {
   const sortBy2 = UserStore((state) => state.sortBy2);
