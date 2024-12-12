@@ -1,0 +1,86 @@
+#root {
+  height: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  
+}
+
+#divstarter {
+  width: 1280px;
+}
+
+.hliner{
+  width: 100%;
+  height: 0;
+  border: 1px dashed #CCC;
+  margin: 10px 0;
+}
+
+/* Button Group Styles */
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.menu-button {
+  position: relative;
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  background-color: #f0f0f0;
+  color: #333;
+  border-color: #e0e0e0;
+}
+
+.menu-button:hover {
+  background-color: #e6e6e6;
+  border-color: #c0c0c0;
+}
+
+.menu-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.menu-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: #007bff;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.menu-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .menu-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}

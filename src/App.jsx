@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import './App.css'
-import GroundPage from './views/GroundPage/GroundPage.jsx'
-import ComparisonPage from './views/ComparisonPage/ComparisonPage.jsx'
+import './App.scss'
+import GroundPage from './components/GroundPage/GroundPage.jsx'
+import ComparisonPage from './components/ComparisonPage/ComparisonPage.jsx'
 import Papa from 'papaparse';
 
 import { UserStore, TARGETS, SORTS } from "./store/UserStore.js";
@@ -11,6 +11,8 @@ function App() {
   const loadedMean = UserStore((state) => state.loadedMean);
   const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
+  const sortBy = UserStore((state) => state.sortBy);
+  const sortBy2 = UserStore((state) => state.sortBy2);
   const setSortBy = UserStore((state) => state.setSortBy);
   const setSortBy2 = UserStore((state) => state.setSortBy2);
 
@@ -22,7 +24,7 @@ function App() {
 
   useEffect(() => {
     async function getData() {
-      const response = await fetch("/240826_total_1296_0.csv");
+      const response = await fetch("/data/240826_total_1296_0.csv");
       const reader = response.body.getReader();
       const result = await reader.read(); // raw array
       const decoder = new TextDecoder("utf-8");
@@ -33,7 +35,7 @@ function App() {
     }
 
     async function getMeanData() {
-      const response = await fetch("/mean_ignorenan.csv");
+      const response = await fetch("/data/mean_ignorenan.csv");
       const reader = response.body.getReader();
       const result = await reader.read(); // raw array
       const decoder = new TextDecoder("utf-8");
@@ -59,47 +61,44 @@ function App() {
   return (
     <>
       <div id='divstarter'>
-        <div>
-          {
-            TARGETS.map((item, index) => {
-              return (
-                <button
-                  className="sortButton"
-                  onClick={() => {
-                    setTarget(item);
-                  }}
-                >
-                  {item}
-                </button>
-              );
-            })
-          }
+        <div className="button-group">
+          {TARGETS.map((item, index) => (
+            <button
+              key={item}
+              className={`menu-button ${target === item ? 'active' : ''}`}
+              onClick={() => {
+                setTarget(item);
+              }}
+            >
+              {item}
+            </button>
+          ))}
         </div>
-        <div>
-          {
-            SORTS.map((item, index) => {
-              return (
-                <button
-                  className="sortButton"
-                  onClick={() => {
-                    if(target == "GROUNDTRUTH"){
-                      setSortBy(item);
-                      setLoadedMean(loadedMean.sort((a, b) => b[item] - a[item]))
-                    }else if(target == "LLM-COMPARISON"){
-                      setSortBy2(item);
-
-                    }
-                  }}
-                >
-                  {item}
-                </button>
-              );
-            })
-          }
+        <div className="button-group">
+          {SORTS.map((item, index) => (
+            <button
+              key={item}
+              className={`menu-button ${
+                (target === "Absolute Score" && sortBy === item) || 
+                (target === "Pairwise Comparison" && sortBy2 === item) 
+                  ? 'active' : ''
+              }`}
+              onClick={() => {
+                if(target === "Absolute Score"){
+                  setSortBy(item);
+                  setLoadedMean(loadedMean.sort((a, b) => b[item] - a[item]))
+                }else if(target === "Pairwise Comparison"){
+                  setSortBy2(item);
+                }
+              }}
+            >
+              {item}
+            </button>
+          ))}
         </div>
-        {target == "GROUNDTRUTH" && <GroundPage />}
-        {target == "LLM-COMPARISON" && <ComparisonPage />}
-      </div >
+        {target === "Absolute Score" && <GroundPage />}
+        {target === "Pairwise Comparison" && <ComparisonPage />}
+      </div>
     </>
   )
 }

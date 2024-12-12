@@ -1,8 +1,9 @@
 import { create } from "zustand";
 
-export const TARGETS = ["GROUNDTRUTH", "LLM-RANKING", "LLM-COMPARISON"]
+export const TARGETS = ["Absolute Score", "Pairwise Comparison"]
 export const SORTS = ["default", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
+export const CATS_FULL = ["Interest", "Memorability", "Trustworthiness", "Empathy", "Aesthetic Pleasure", "Intuitiveness", "Comfort"]
 export const CATS_WHY = ["int-why", "mem-why", "tru-why", "emp-why", "aes-why", "itt-why", "cft-why"]
 
 export const UserStore = create((set, get) => ({
