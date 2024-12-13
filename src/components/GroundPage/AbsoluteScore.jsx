@@ -1,16 +1,22 @@
 import { React, useEffect } from "react";
 import Plot from 'react-plotly.js';
 
-import "./GroundPage.scss";
+import "./AbsoluteScore.scss";
 import { UserStore, CATS, CATS_FULL } from "../../store/UserStore.js";
 import { getAVGofFactors, getCountinFactor, getWHYofFactors } from "../../utils/dataWrangling.jsx";
-import ChartSelector from './ChartSelector';
+import ChartSelector from './ChartSelector.jsx';
 
 const MODELS = ["Human", "GPT4o", "llama", "sonnet_1", "sonnet_2"];
 
-const GroundPage = () => {
+const AbsoluteScore = () => {
   const currentImage = UserStore((state) => state.currentImage);
   const loaded = UserStore((state) => state.loaded);
+  // read sonnetScores1, sonnetScores2, llamaScores, gpt4Scores from UserStore
+  const sonnetScores1 = UserStore((state) => state.sonnetScores1);
+  const sonnetScores2 = UserStore((state) => state.sonnetScores2);
+  const llamaScores = UserStore((state) => state.llamaScores);
+  const gpt4Scores = UserStore((state) => state.gpt4Scores);
+
   const currentFactor = UserStore((state) => state.currentFactor);
   const setCurrentFactor = UserStore((state) => state.setCurrentFactor);
   const currentScore = UserStore((state) => state.currentScore);
@@ -49,6 +55,20 @@ const GroundPage = () => {
     }
   };
 
+  const getScores = (modelName) => {
+    if (modelName === "Human") {
+      return loaded;
+    } else if (modelName === "GPT4o") {
+      return gpt4Scores;
+    } else if (modelName === "llama") {
+      return llamaScores;
+    } else if (modelName === "sonnet_1") {
+      return sonnetScores1;
+    } else if (modelName === "sonnet_2") {
+      return sonnetScores2;
+    }
+  }
+
   return (
     <div className="vertical">
       <div className="charts-view-container">
@@ -85,8 +105,8 @@ const GroundPage = () => {
                         {
                           type: 'bar',
                           x: CATS,
-                          y: getAVGofFactors(loaded, currentImage, currentModel).map(v => Number(v).toFixed(2)),
-                          text: getAVGofFactors(loaded, currentImage, currentModel).map(v => Number(v).toFixed(2)),
+                          y: getAVGofFactors(getScores(currentModel), currentImage, currentModel).map(v => Number(v).toFixed(2)),
+                          text: getAVGofFactors(getScores(currentModel), currentImage, currentModel).map(v => Number(v).toFixed(2)),
                           textposition: 'auto',
                           marker: {
                             color: getFactorColors(),
@@ -143,8 +163,8 @@ const GroundPage = () => {
                         {
                           type: 'bar',
                           x: [...Array(7).keys()].map(e => e + 1),
-                          y: getCountinFactor(loaded, currentImage, currentFactor, currentModel).map(v => Number(v)),
-                          text: getCountinFactor(loaded, currentImage, currentFactor, currentModel).map(v => Number(v)),
+                          y: getCountinFactor(getScores(currentModel), currentImage, currentFactor, currentModel).map(v => Number(v)),
+                          text: getCountinFactor(getScores(currentModel), currentImage, currentFactor, currentModel).map(v => Number(v)),
                           textposition: 'auto',
                           marker: {
                             color: getScoreColors(),
@@ -209,4 +229,4 @@ const GroundPage = () => {
   );
 };
 
-export default GroundPage;
+export default AbsoluteScore;

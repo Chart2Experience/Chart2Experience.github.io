@@ -1,42 +1,23 @@
 import {CATS} from "../store/UserStore.js"
 
-export const getAVGofFactors = (fullData, currentImage, currentModel) => {
+export const getAVGofFactors = (fullData, image, model) => {
   // Handle different model data structures
-  if (currentModel === "Human") {
-    const dataWithChartname = fullData.filter((e) => e.chart_name === currentImage);
-    return CATS.map((cat) => {
-      let count = 0;
-      return dataWithChartname.reduce((acc, e) => {
-        if (parseInt(e[cat]) > 0) {
-          count++;
-        }
-        return acc + parseInt(e[cat])
-      }, 0) / (count || 1);
-    });
-  } else {
-    // Handle AI model data
-    const modelMap = {
-      'GPT4o': 'gpt4Scores',
-      'llama': 'llamaScores',
-      'sonnet_1': 'sonnetScores1',
-      'sonnet_2': 'sonnetScores2'
-    };
-    
-    const scores = fullData[modelMap[currentModel]];
-    if (!scores) return CATS.map(() => 0);
-
-    const relevantScores = scores.filter(row => row.chart_name === currentImage);
-    return CATS.map(cat => {
-      const values = relevantScores.map(row => parseFloat(row[cat])).filter(v => v > 0);
-      return values.length ? values.reduce((a, b) => a + b) / values.length : 0;
-    });
-  }
+  const dataWithChartname = fullData.filter((e) => e.chart_name === image);
+  return CATS.map((cat) => {
+    let count = 0;
+    return dataWithChartname.reduce((acc, e) => {
+      if (parseInt(e[cat]) > 0) {
+        count++;
+      }
+      return acc + parseInt(e[cat])
+    }, 0) / (count || 1);
+  });
 }
 
-export const getCountinFactor = (fullData, currentImage, currentFactor, currentModel) => {
-  if (currentModel === "Human") {
-    const dataWithChartname = fullData.filter((e) => e.chart_name === currentImage);
-    const scoresSelected = dataWithChartname.map((e) => e[currentFactor]);
+export const getCountinFactor = (fullData, image, factor, model) => {
+  if (model === "Human") {
+    const dataWithChartname = fullData.filter((e) => e.chart_name === image);
+    const scoresSelected = dataWithChartname.map((e) => e[factor]);
     return [...Array(7).keys()].map((item) =>
       scoresSelected.filter(x => parseInt(x) === (item + 1)).length
     );
@@ -49,11 +30,11 @@ export const getCountinFactor = (fullData, currentImage, currentFactor, currentM
       'sonnet_2': 'sonnetScores2'
     };
     
-    const scores = fullData[modelMap[currentModel]];
+    const scores = fullData[modelMap[model]];
     if (!scores) return Array(7).fill(0);
 
-    const relevantScores = scores.filter(row => row.chart_name === currentImage);
-    const scoresSelected = relevantScores.map(row => row[currentFactor]);
+    const relevantScores = scores.filter(row => row.chart_name === image);
+    const scoresSelected = relevantScores.map(row => row[factor]);
     
     return [...Array(7).keys()].map((item) =>
       scoresSelected.filter(x => parseInt(x) === (item + 1)).length
@@ -61,12 +42,12 @@ export const getCountinFactor = (fullData, currentImage, currentFactor, currentM
   }
 }
 
-export const getWHYofFactors = (fullData, currentImage, currentFactor, currentScore, currentModel) => {
-  if (currentModel === "Human") {
-    const dataWithChartname = fullData.filter((e) => e.chart_name === currentImage);
-    const selectedWhy = dataWithChartname.map((e) => [e[currentFactor], e[currentFactor + "-why"]]);
+export const getWHYofFactors = (fullData, image, factor, score, model) => {
+  if (model === "Human") {
+    const dataWithChartname = fullData.filter((e) => e.chart_name === image);
+    const selectedWhy = dataWithChartname.map((e) => [e[factor], e[factor + "-why"]]);
     const sorted = selectedWhy.sort((a, b) => a[0] - b[0]);
-    return (currentScore !== 0 ? sorted.filter((e) => e[0] == parseInt(currentScore)) : sorted)
+    return (score !== 0 ? sorted.filter((e) => e[0] == parseInt(score)) : sorted)
       .map((e, idx) => <div key={idx}>{e[0]}: {e[1]}</div>);
   } else {
     // For AI models, we might want to return a message indicating that explanations are not available

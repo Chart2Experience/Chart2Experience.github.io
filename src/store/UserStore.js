@@ -70,11 +70,13 @@ export const UserStore = create((set, get) => ({
     try {
       // Load all score files in parallel
       const [sonnet1Data, sonnet2Data, llamaData, gpt4Data] = await Promise.all([
-        fetch('/data/scores_sonnet_36_1.csv').then(res => res.text()),
-        fetch('/data/scores_sonnet_36_2.csv').then(res => res.text()),
-        fetch('/data/scores_llama_216.csv').then(res => res.text()),
-        fetch('/data/scores_GPT4o_36.csv').then(res => res.text())
+        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/data/scores_sonnet_36_1.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/data/scores_sonnet_36_2.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_llama_216.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_GPT4o_36.csv').then(res => res.text())
       ]);
+
+      console.log(sonnet1Data);
 
       // Parse CSV data
       const parseCSV = (csvText) => {
@@ -91,6 +93,7 @@ export const UserStore = create((set, get) => ({
 
       // Set parsed data to store
       store.setSonnetScores1(parseCSV(sonnet1Data));
+      console.log(store.sonnetScores1);
       store.setSonnetScores2(parseCSV(sonnet2Data));
       store.setLlamaScores(parseCSV(llamaData));
       store.setGpt4Scores(parseCSV(gpt4Data));

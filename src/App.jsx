@@ -1,13 +1,15 @@
 import { useEffect } from 'react'
 import './App.scss'
-import GroundPage from './components/GroundPage/GroundPage.jsx'
-import ComparisonPage from './components/ComparisonPage/ComparisonPage.jsx'
+import AbsoluteScore from './components/GroundPage/AbsoluteScore.jsx'
+import Comparison from './components/ComparisonPage/Comparison.jsx'
 import { UserStore, TARGETS, SORTS } from "./store/UserStore.js";
 
 function App() {
   const loadedMean = UserStore((state) => state.loadedMean);
-  const setLoadedMean = UserStore((state) => state.setLoadedMean);
+  const loaded = UserStore((state) => state.loaded);
+  const areScoresLoaded = UserStore((state) => state.areScoresLoaded());
   const loadAllData = UserStore((state) => state.loadAllData);
+  const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
   const sortBy = UserStore((state) => state.sortBy);
   const sortBy2 = UserStore((state) => state.sortBy2);
@@ -21,6 +23,20 @@ function App() {
   useEffect(() => {
     loadAllData();
   }, []);
+
+  // Show loading indicator if any data is not loaded
+  if (!loaded || !loadedMean || !areScoresLoaded) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <>
@@ -62,8 +78,8 @@ function App() {
             ))}
           </div>
         </div>
-        {target === "Task 1: Absolute Score" && <GroundPage />}
-        {target === "Task 2: Pairwise Comparison" && <ComparisonPage />}
+        {target === "Task 1: Absolute Score" && <AbsoluteScore />}
+        {target === "Task 2: Pairwise Comparison" && <Comparison />}
       </div>
     </>
   )

@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import Plot from 'react-plotly.js';
 
 import { ACCURACY_CASES } from "../../../public/data/accuracy_bin2_cases.js";
-import "./ComparisonPage.scss";
+import "./Comparison.scss";
 import { UserStore, CATS } from "../../store/UserStore.js";
 
-const ComparisonPage = () => {
+const Comparison = () => {
   const [selectedModel, setSelectedModel] = useState('GPT4o');
   const sortBy2 = UserStore((state) => state.sortBy2);
   const bin = UserStore((state) => state.bin);
@@ -58,8 +58,8 @@ const ComparisonPage = () => {
         <div key={idx} className="comparison-row">
           <div className="comparison-images">
             <div className="image-pair">
-              <img src={`../../../public/image/${e[0]}.png`} alt={`Left ${e[0]}`} />
-              <img src={`../../../public/image/${e[1]}.png`} alt={`Right ${e[1]}`} />
+              <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[0]}.png`} alt={`Left ${e[0]}`} />
+              <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[1]}.png`} alt={`Right ${e[1]}`} />
             </div>
           </div>
           <div className="comparison-details">
@@ -97,7 +97,7 @@ const ComparisonPage = () => {
           data={plotlyData}
           layout={{
             width: 1000,
-            height: 400,
+            height: 300,
             title: `Accuracy by Bin - ${selectedModel}`,
             xaxis: {
               title: 'Bin',
@@ -107,9 +107,27 @@ const ComparisonPage = () => {
             },
             yaxis: {
               title: 'Accuracy',
-              range: [0, 1]
+              tickvals: [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+              range: [0.33, 1.02]
             },
-            grid: { rows: 1, columns: 1 }
+            shapes: [
+              {
+                type: 'line',
+                x0: 0,
+                x1: 1,
+                y0: 0.5,
+                y1: 0.5,
+                xref: 'paper',
+                yref: 'y',
+                line: {
+                  color: 'gray',
+                  width: 2,
+                  dash: 'dash'
+                }
+              }
+            ],
+            grid: { rows: 1, columns: 1 },
+            margin: { l: 50, r: 20, t: 50, b: 50 }
           }}
           config={{ responsive: true }}
           onClick={handlePlotClick}
@@ -121,4 +139,4 @@ const ComparisonPage = () => {
   );
 };
 
-export default ComparisonPage;
+export default Comparison;
