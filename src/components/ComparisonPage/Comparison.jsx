@@ -10,6 +10,8 @@ const Comparison = () => {
   const bin = UserStore((state) => state.bin);
   const setBin = UserStore((state) => state.setBin);
   const currentModelPair = UserStore((state) => state.currentModelPair);
+  const [predictionFilter, setPredictionFilter] = useState("All");
+  const [samenessFilter, setSamenessFilter] = useState("All");
 
   const getAccuracyData = (modelName) => {
     if (modelName === "GPT4o") {
@@ -99,28 +101,44 @@ const Comparison = () => {
   }
 
   const filteredCases = useMemo(() => {
-    console.log(attributePair, bin, ACCURACY_CASES, currentModelPair);
     if (attributePair === "All" || bin === null) {
       return [];
     }
     
     return getCases(currentModelPair)
-      .filter((e) => !e[3])
+      .filter(e => {
+        const matchesPrediction = predictionFilter === "All" || 
+          (predictionFilter === "Correct" && e[3]) ||
+          (predictionFilter === "Wrong" && !e[3]);
+        
+        const isSameSubject = e[0].split("-")[0] === e[1].split("-")[0]; // Assuming e[5] contains subject sameness
+        const matchesSameness = samenessFilter === "All" ||
+          (samenessFilter === "Same" && isSameSubject) ||
+          (samenessFilter === "Different" && !isSameSubject);
+        
+        return matchesPrediction && matchesSameness;
+      })
       .map((e, idx) => (
         <div key={idx} className="comparison-row">
           <div className="comparison-images">
             <div className="image-pair">
-              <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[0]}.png`} alt={`Left ${e[0]}`} />
-              <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[1]}.png`} alt={`Right ${e[1]}`} />
+              <div className="image-name">
+                {e[0]}
+                <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[0]}.png`} alt={`Left ${e[0]}`} />
+              </div>
+              <div className="image-name">
+                {e[1]}
+                <img src={`https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/image/${e[1]}.png`} alt={`Right ${e[1]}`} />
+              </div>
             </div>
           </div>
           <div className="comparison-details">
             <div className="score-info">
               <span className="score-difference">
-                {e[2] > 0 ? "Left" : "Right"} Higher (+{Math.abs(e[2]).toFixed(2)})
+                {e[2] > 0 ? "Left" : "Right"} Higher ({Math.abs(e[2]).toFixed(2)})
               </span>
               <span className="prediction-status">
-                {e[3] ? "Predicted Well" : "Prediction Wrong"}
+                {e[3] ? "Correct" : "Wrong"}
               </span>
             </div>
             <div className="reason-text">
@@ -129,7 +147,7 @@ const Comparison = () => {
           </div>
         </div>
       ));
-  }, [attributePair, bin, currentModelPair]);
+  }, [attributePair, bin, currentModelPair, predictionFilter, samenessFilter]);
 
   return (
     <div className="comparison-container">
@@ -186,7 +204,38 @@ const Comparison = () => {
         />
       </div>
       <div className="divider" />
-      {attributePair !== "default" && bin !== null && filteredCases}
+
+      {attributePair !== "default" && bin !== null && (
+        <>
+          <div className="filters">
+            <b>Filters | </b>
+            <div className="filter-group">
+              <label>Prediction:</label>
+              <select 
+                value={predictionFilter} 
+                onChange={(e) => setPredictionFilter(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="Correct">Correct</option>
+                <option value="Wrong">Wrong</option>
+              </select>
+            </div>
+            <b> | </b>
+            <div className="filter-group">
+              <label>Subject:</label>
+              <select 
+                value={samenessFilter} 
+                onChange={(e) => setSamenessFilter(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="Same">Same</option>
+                <option value="Different">Different</option>
+              </select>
+            </div>
+          </div>
+          {filteredCases}
+        </>
+      )}
     </div>
   );
 };
