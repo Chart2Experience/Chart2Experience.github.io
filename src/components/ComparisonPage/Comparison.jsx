@@ -6,53 +6,105 @@ import "./Comparison.scss";
 import { UserStore, CATS } from "../../store/UserStore.js";
 
 const Comparison = () => {
-  const [selectedModel, setSelectedModel] = useState('GPT4o');
-  const sortBy2 = UserStore((state) => state.sortBy2);
+  const attributePair = UserStore((state) => state.attributePair);
   const bin = UserStore((state) => state.bin);
   const setBin = UserStore((state) => state.setBin);
+  const currentModelPair = UserStore((state) => state.currentModelPair);
 
-  // Get available models dynamically
-  const availableModels = useMemo(() => {
-    return Object.keys(ACCURACY_CASES);
-  }, []);
+  const getAccuracyData = (modelName) => {
+    if (modelName === "GPT4o") {
+      return ACCURACY_CASES['GPT4o'];
+    } else if (modelName === "Llama3.2 Vision Instruct") {
+      return ACCURACY_CASES['llama'];
+    } else if (modelName === "Sonnet 3.5 (1)") {
+      return ACCURACY_CASES['sonnet_1'];
+    } else if (modelName === "Sonnet 3.5 (2)") {
+      return ACCURACY_CASES['sonnet_2'];
+    }
+  }
 
   // Prepare data for Plotly line chart
   const plotlyData = useMemo(() => {
-    if (sortBy2 === "default") return [];
+    if (attributePair === "default" || currentModelPair === "Human") return [];
 
-    const accuracyData = ACCURACY_CASES[selectedModel][sortBy2];
-    return [{
-      x: accuracyData.map(item => item.bin),
-      y: accuracyData.map(item => item.accuracy),
-      type: 'scatter',
-      mode: 'lines+markers',
-      marker: {
-        size: 10,
-        color: accuracyData.map((_, index) => 
-          bin === index ? 'red' : 'blue'
+    const accuracyData = attributePair === "All" 
+      ? Object.keys(getAccuracyData(currentModelPair)).flatMap(att => 
+          getAccuracyData(currentModelPair)[att].map(item => ({ ...item, att: att }))
+        )
+      : getAccuracyData(currentModelPair)[attributePair];
+
+    // If not 'All', return single line as before
+    if (attributePair !== "All") {
+      return [{
+        x: accuracyData.map(item => item.bin),
+        y: accuracyData.map(item => item.accuracy),
+        type: 'scatter',
+        mode: 'lines+markers',
+        marker: {
+          size: 10,
+          color: accuracyData.map((_, index) => bin === index ? '#343148FF' : '#D7C49EFF'),
+          line: { width: 1.5, color: 'DarkSlateGrey' }
+        },
+        text: accuracyData.map(item => 
+          `${item.correct}/${item.count} = ${item.accuracy.toFixed(2)}`
         ),
-        line: { width: 2, color: 'DarkSlateGrey' }
-      },
-      text: accuracyData.map(item => 
-        `${item.correct}/${item.count} = ${item.accuracy.toFixed(2)}`
-      ),
-      hoverinfo: 'text'
-    }];
-  }, [sortBy2, bin, selectedModel]);
+        hoverinfo: 'text'
+      }];
+    }
+
+    // For 'All', create separate lines for each attribute
+    const attributes = [...new Set(accuracyData.map(item => item.att))];
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B9B9B'];
+
+    return attributes.map((att, index) => {
+      const attData = accuracyData.filter(item => item.att === att);
+      return {
+        name: att,  // This will show in the legend
+        x: attData.map(item => item.bin),
+        y: attData.map(item => item.accuracy),
+        type: 'scatter',
+        mode: 'lines+markers',
+        marker: {
+          size: 8,
+          color: colors[index],
+          line: { width: 1.5, color: 'DarkSlateGrey' }
+        },
+        text: attData.map(item => 
+          `${att}: ${item.correct}/${item.count} = ${item.accuracy.toFixed(2)}`
+        ),
+        hoverinfo: 'text'
+      };
+    });
+  }, [attributePair, bin, currentModelPair]);
 
   const handlePlotClick = (event) => {
-    if (event.points && event.points.length > 0) {
+    if (event.points && event.points.length > 0 && attributePair !== "All") {
       const clickedPointIndex = event.points[0].pointIndex;
       setBin(clickedPointIndex);
     }
   };
 
+  const getCases = (modelName) => {
+    if (modelName === "GPT4o") {
+      return ACCURACY_CASES['GPT4o'][attributePair][bin]['cases']
+    } else if (modelName === "Llama3.2 Vision Instruct") {
+      return ACCURACY_CASES['llama'][attributePair][bin]['cases']
+    } else if (modelName === "Sonnet 3.5 (1)") {
+      return ACCURACY_CASES['sonnet_1'][attributePair][bin]['cases']
+    } else if (modelName === "Sonnet 3.5 (2)") {
+      return ACCURACY_CASES['sonnet_2'][attributePair][bin]['cases']
+    } else {
+      return ACCURACY_CASES[modelName][attributePair][bin]['cases']
+    }
+  }
+
   const filteredCases = useMemo(() => {
-    if (sortBy2 === "default" || bin === null) {
+    console.log(attributePair, bin, ACCURACY_CASES, currentModelPair);
+    if (attributePair === "All" || bin === null) {
       return [];
     }
     
-    return ACCURACY_CASES[selectedModel][sortBy2][bin]['cases']
+    return getCases(currentModelPair)
       .filter((e) => !e[3])
       .map((e, idx) => (
         <div key={idx} className="comparison-row">
@@ -77,28 +129,17 @@ const Comparison = () => {
           </div>
         </div>
       ));
-  }, [sortBy2, bin, selectedModel]);
+  }, [attributePair, bin, currentModelPair]);
 
   return (
     <div className="comparison-container">
-      <div className="model-selector">
-        {availableModels.map(model => (
-          <button
-            key={model}
-            className={`model-button ${selectedModel === model ? 'active' : ''}`}
-            onClick={() => setSelectedModel(model)}
-          >
-            {model}
-          </button>
-        ))}
-      </div>
       <div className="chart-container">
         <Plot
           data={plotlyData}
           layout={{
             width: 1000,
             height: 300,
-            title: `Accuracy by Bin - ${selectedModel}`,
+            title: `Accuracy by Bin - ${currentModelPair}`,
             xaxis: {
               title: 'Bin',
               tickmode: 'array',
@@ -127,14 +168,25 @@ const Comparison = () => {
               }
             ],
             grid: { rows: 1, columns: 1 },
-            margin: { l: 50, r: 20, t: 50, b: 50 }
+            margin: { l: 50, r: 20, t: 50, b: 50 },
+            ...(attributePair === "All" && {
+              legend: {
+                x: 0.05,
+                y: 1.05,
+                xanchor: 'left',
+                yanchor: 'top',
+                orientation: 'h',
+                traceorder: 'normal',
+                itemwidth: 10
+              }
+            })
           }}
           config={{ responsive: true }}
           onClick={handlePlotClick}
         />
       </div>
       <div className="divider" />
-      {sortBy2 !== "default" && bin !== null && filteredCases}
+      {attributePair !== "default" && bin !== null && filteredCases}
     </div>
   );
 };

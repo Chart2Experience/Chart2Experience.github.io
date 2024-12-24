@@ -51,7 +51,7 @@
         color: #666;
 
         .score-difference {
-          color: #007bff;
+          color: #343148FF;
         }
 
         .prediction-status {
@@ -81,13 +81,14 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background-color: #e0e0e0;
+        background-color: #e6e6e6;
+      border-color: #c0c0c0;
       }
 
       &.active {
-        background-color: #007bff;
+        background-color: #343148FF;
         color: white;
-        border-color: #0056b3;
+        border-color: #343148FF;
       }
     }
   }

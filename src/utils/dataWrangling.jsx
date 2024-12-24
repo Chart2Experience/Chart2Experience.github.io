@@ -14,32 +14,12 @@ export const getAVGofFactors = (fullData, image, model) => {
   });
 }
 
-export const getCountinFactor = (fullData, image, factor, model) => {
-  if (model === "Human") {
-    const dataWithChartname = fullData.filter((e) => e.chart_name === image);
-    const scoresSelected = dataWithChartname.map((e) => e[factor]);
-    return [...Array(7).keys()].map((item) =>
-      scoresSelected.filter(x => parseInt(x) === (item + 1)).length
-    );
-  } else {
-    // Handle AI model data
-    const modelMap = {
-      'GPT4o': 'gpt4Scores',
-      'llama': 'llamaScores',
-      'sonnet_1': 'sonnetScores1',
-      'sonnet_2': 'sonnetScores2'
-    };
-    
-    const scores = fullData[modelMap[model]];
-    if (!scores) return Array(7).fill(0);
-
-    const relevantScores = scores.filter(row => row.chart_name === image);
-    const scoresSelected = relevantScores.map(row => row[factor]);
-    
-    return [...Array(7).keys()].map((item) =>
-      scoresSelected.filter(x => parseInt(x) === (item + 1)).length
-    );
-  }
+export const getCountinFactor = (data, image, factor, model) => {
+  const dataWithChartname = data.filter((e) => e.chart_name === image);
+  const scoresSelected = dataWithChartname.map((e) => e[factor]);
+  return [...Array(7).keys()].map((item) =>
+    scoresSelected.filter(x => parseInt(x) === (item + 1)).length
+  );
 }
 
 export const getWHYofFactors = (fullData, image, factor, score, model) => {

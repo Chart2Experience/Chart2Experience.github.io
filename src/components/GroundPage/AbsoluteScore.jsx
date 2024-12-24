@@ -21,15 +21,14 @@ const AbsoluteScore = () => {
   const setCurrentFactor = UserStore((state) => state.setCurrentFactor);
   const currentScore = UserStore((state) => state.currentScore);
   const setCurrentScore = UserStore((state) => state.setCurrentScore);
-  const currentModel = UserStore((state) => state.currentModel);
-  const setCurrentModel = UserStore((state) => state.setCurrentModel);
+  const currentModelAbs = UserStore((state) => state.currentModelAbs);
 
   const getFactorColors = () => {
-    return CATS.map(cat => cat === currentFactor ? '#007bff' : '#1f77b4');
+    return CATS.map(cat => cat === currentFactor ? '#343148FF' : '#D7C49EFF');
   };
 
   const getScoreColors = () => {
-    return [...Array(7).keys()].map(i => (i + 1) === currentScore ? '#007bff' : '#1f77b4');
+    return [...Array(7).keys()].map(i => (i + 1) === currentScore ? '#343148FF' : '#D7C49EFF');
   };
 
   const handleFactorClick = (data) => {
@@ -60,11 +59,11 @@ const AbsoluteScore = () => {
       return loaded;
     } else if (modelName === "GPT4o") {
       return gpt4Scores;
-    } else if (modelName === "llama") {
+    } else if (modelName === "Llama3.2 Vision Instruct") {
       return llamaScores;
-    } else if (modelName === "sonnet_1") {
+    } else if (modelName === "Sonnet 3.5 (1)") {
       return sonnetScores1;
-    } else if (modelName === "sonnet_2") {
+    } else if (modelName === "Sonnet 3.5 (2)") {
       return sonnetScores2;
     }
   }
@@ -84,18 +83,6 @@ const AbsoluteScore = () => {
           </div>
 
           <div className="detail-on-image">
-            <div className="model-selector">
-              {MODELS.map((model) => (
-                <button
-                  key={model}
-                  className={`model-button ${model === currentModel ? 'active' : ''}`}
-                  onClick={() => setCurrentModel(model)}
-                >
-                  {model}
-                </button>
-              ))}
-            </div>
-
             {currentImage != 0 && (
               <>
                 <div className="whyWrapper">
@@ -105,8 +92,8 @@ const AbsoluteScore = () => {
                         {
                           type: 'bar',
                           x: CATS,
-                          y: getAVGofFactors(getScores(currentModel), currentImage, currentModel).map(v => Number(v).toFixed(2)),
-                          text: getAVGofFactors(getScores(currentModel), currentImage, currentModel).map(v => Number(v).toFixed(2)),
+                          y: getAVGofFactors(getScores(currentModelAbs), currentImage, currentModelAbs).map(v => Number(v).toFixed(2)),
+                          text: getAVGofFactors(getScores(currentModelAbs), currentImage, currentModelAbs).map(v => Number(v).toFixed(2)),
                           textposition: 'auto',
                           marker: {
                             color: getFactorColors(),
@@ -163,8 +150,8 @@ const AbsoluteScore = () => {
                         {
                           type: 'bar',
                           x: [...Array(7).keys()].map(e => e + 1),
-                          y: getCountinFactor(getScores(currentModel), currentImage, currentFactor, currentModel).map(v => Number(v)),
-                          text: getCountinFactor(getScores(currentModel), currentImage, currentFactor, currentModel).map(v => Number(v)),
+                          y: getCountinFactor(getScores(currentModelAbs), currentImage, currentFactor, currentModelAbs).map(v => Number(v)),
+                          text: getCountinFactor(getScores(currentModelAbs), currentImage, currentFactor, currentModelAbs).map(v => Number(v)),
                           textposition: 'auto',
                           marker: {
                             color: getScoreColors(),
@@ -217,7 +204,7 @@ const AbsoluteScore = () => {
                     {currentFactor==''?'Select Factor':'Factor: '
                     + CATS_FULL[CATS.indexOf(currentFactor)]}  /  Score: {currentScore==0?'All':currentScore}</div>
                   <div className="explanation-text">
-                    {getWHYofFactors(loaded, currentImage, currentFactor, currentScore, currentModel)}
+                    {getWHYofFactors(loaded, currentImage, currentFactor, currentScore, currentModelAbs)}
                   </div>
                 </div>
               </>

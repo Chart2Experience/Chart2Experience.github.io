@@ -1,17 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Plot from 'react-plotly.js';
 import "./ChartSelector.scss";
 import { UserStore } from "../../store/UserStore.js";
 
 const ChartSelector = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const sortBy = UserStore((state) => state.sortBy);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const attributeAbs = UserStore((state) => state.attributeAbs);
   const currentImage = UserStore((state) => state.currentImage);
   const setCurrentImage = UserStore((state) => state.setCurrentImage);
   const loadedMean = UserStore((state) => state.loadedMean);
+  const currentModelAbs = UserStore((state) => state.currentModelAbs);
 
   const getBarColors = () => {
-    return loadedMean.map(item => item.chart_name === currentImage ? '#007bff' : '#1f77b4');
+    return loadedMean[currentModelAbs].map(item => item.chart_name === currentImage ? '#343148FF' : '#D7C49EFF');
   };
 
   const imageRows = useMemo(() => {
@@ -64,24 +65,24 @@ const ChartSelector = () => {
         maxHeight: isSidebarOpen ? '300px' : '50px'
       }}
     >
-      <button 
+      {/* <button 
         className="sidebar-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         {isSidebarOpen ? 'Hide Images' : 'Show Images'}
-      </button>
+      </button> */}
       
       {isSidebarOpen && (
         <div className="sidebar-content">
-          {sortBy === "default" ? imageRows : (
+          {attributeAbs === "default" ? imageRows : (
             <div className="chart-container">
               <Plot
                 data={[
                   {
                     type: 'bar',
-                    y: loadedMean.map(item => Number(item[sortBy]).toFixed(2)),
-                    x: loadedMean.map(item => item.chart_name),
-                    text: loadedMean.map(item => Number(item[sortBy]).toFixed(2)),
+                    y: loadedMean[currentModelAbs].sort((a, b) => b[attributeAbs] - a[attributeAbs]).map(item => Number(item[attributeAbs]).toFixed(2)),
+                    x: loadedMean[currentModelAbs].sort((a, b) => b[attributeAbs] - a[attributeAbs]).map(item => item.chart_name),
+                    text: loadedMean[currentModelAbs].sort((a, b) => b[attributeAbs] - a[attributeAbs]).map(item => Number(item[attributeAbs]).toFixed(2)),
                     textposition: 'auto',
                     hoverinfo: 'x+y',
                     marker: {
@@ -127,7 +128,7 @@ const ChartSelector = () => {
                 useResizeHandler={true}
                 onClick={(data) => {
                   if (data.points && data.points[0]) {
-                    const clickedImage = loadedMean[data.points[0].pointIndex].chart_name;
+                    const clickedImage = loadedMean[currentModelAbs][data.points[0].pointIndex].chart_name;
                     if (clickedImage === currentImage) {
                       setCurrentImage(''); // Reset if clicking the same image
                     } else {

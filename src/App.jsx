@@ -2,19 +2,23 @@ import { useEffect } from 'react'
 import './App.scss'
 import AbsoluteScore from './components/GroundPage/AbsoluteScore.jsx'
 import Comparison from './components/ComparisonPage/Comparison.jsx'
-import { UserStore, TARGETS, SORTS } from "./store/UserStore.js";
+import { UserStore, TARGETS, SORTS_ABS, SORTS_PAIR, MODELS } from "./store/UserStore.js";
 
 function App() {
   const loadedMean = UserStore((state) => state.loadedMean);
   const loaded = UserStore((state) => state.loaded);
   const areScoresLoaded = UserStore((state) => state.areScoresLoaded());
   const loadAllData = UserStore((state) => state.loadAllData);
-  const setLoadedMean = UserStore((state) => state.setLoadedMean);
 
-  const sortBy = UserStore((state) => state.sortBy);
-  const sortBy2 = UserStore((state) => state.sortBy2);
-  const setSortBy = UserStore((state) => state.setSortBy);
-  const setSortBy2 = UserStore((state) => state.setSortBy2);
+  const attributeAbs = UserStore((state) => state.attributeAbs);
+  const attributePair = UserStore((state) => state.attributePair);
+  const setAttributeAbs = UserStore((state) => state.setAttributeAbs);
+  const setAttributePair = UserStore((state) => state.setAttributePair);
+
+  const currentModelAbs = UserStore((state) => state.currentModelAbs);
+  const setCurrentModelAbs = UserStore((state) => state.setCurrentModelAbs);
+  const currentModelPair = UserStore((state) => state.currentModelPair);
+  const setCurrentModelPair = UserStore((state) => state.setCurrentModelPair);
 
   const target = UserStore((state) => state.target);
   const setTarget = UserStore((state) => state.setTarget);
@@ -56,20 +60,40 @@ function App() {
             ))}
           </div>
           <div className="button-group">
-            {SORTS.map((item, index) => (
+            {target === "Task 1: Absolute Score" && SORTS_ABS.map((item, index) => (
+              <button
+                key={item}
+                className={`menu-button ${(attributeAbs === item)? 'active' : ''}`}
+                onClick={() => setAttributeAbs(item)}
+              >
+                {item}
+              </button>
+            ))}
+            {target === "Task 2: Pairwise Comparison" && SORTS_PAIR.map((item, index) => (
+              <button
+                key={item}
+                className={`menu-button ${attributePair === item ? 'active' : ''}`}
+                onClick={() => setAttributePair(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+          <div className="button-group">
+            {MODELS.map((item, index) => (
               <button
                 key={item}
                 className={`menu-button ${
-                  (target === "Task 1: Absolute Score" && sortBy === item) || 
-                  (target === "Task 2: Pairwise Comparison" && sortBy2 === item) 
+                  (target === "Task 1: Absolute Score" && currentModelAbs === item) || 
+                  (target === "Task 2: Pairwise Comparison" && currentModelPair === item)
                     ? 'active' : ''
                 }`}
+                disabled={(target === "Task 2: Pairwise Comparison" && item === 'Human')}
                 onClick={() => {
                   if(target === "Task 1: Absolute Score"){
-                    setSortBy(item);
-                    setLoadedMean(loadedMean.sort((a, b) => b[item] - a[item]))
+                    setCurrentModelAbs(item);
                   }else if(target === "Task 2: Pairwise Comparison"){
-                    setSortBy2(item);
+                    setCurrentModelPair(item);
                   }
                 }}
               >
