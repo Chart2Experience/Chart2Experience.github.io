@@ -74,7 +74,7 @@ const ChartSelector = () => {
       
       {isSidebarOpen && (
         <div className="sidebar-content">
-          {attributeAbs === "default" ? imageRows : (
+          {attributeAbs === "image" ? imageRows : (
             <div className="chart-container">
               <Plot
                 data={[

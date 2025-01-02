@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import Papa from 'papaparse';
 
-export const TARGETS = ["Task 1: Absolute Score", "Task 2: Pairwise Comparison"]
-export const SORTS_ABS = ["default", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
+export const TARGETS = ["Introduction", "Task 1: Absolute Score", "Task 2: Pairwise Comparison"]
+export const SORTS_ABS = ["image", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const SORTS_PAIR = ["All", "int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS_FULL = ["Interest", "Memorability", "Trustworthiness", "Empathy", "Aesthetic Pleasure", "Intuitiveness", "Comfort"]
@@ -11,12 +11,12 @@ export const MODELS = ["Human", "GPT4o", "Llama3.2 Vision Instruct", "Sonnet 3.5
 
 export const UserStore = create((set, get) => ({
   // Target
-  target: "Task 1: Absolute Score",
+  target: "Introduction",
   setTarget: (tar) => set({ target: tar }),
 
   
   // Absolute Score
-  attributeAbs: "default",
+  attributeAbs: "image",
   setAttributeAbs: (n) => set({ attributeAbs: n }),
 
   currentImage: "COVID-1",
@@ -43,7 +43,7 @@ export const UserStore = create((set, get) => ({
   attributePair: "int",
   setAttributePair: (n) => set({ attributePair: n }),
 
-  bin: null,
+  bin: 9,
   setBin: (b) => set({ bin: b }),
 
   // Model selection

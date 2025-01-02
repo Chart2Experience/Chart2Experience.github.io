@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import './App.scss'
 import AbsoluteScore from './components/GroundPage/AbsoluteScore.jsx'
 import Comparison from './components/ComparisonPage/Comparison.jsx'
+import IntroductionPage from './components/IntroductionPage/IntroductionPage.jsx'
 import { UserStore, TARGETS, SORTS_ABS, SORTS_PAIR, MODELS } from "./store/UserStore.js";
 
 function App() {
@@ -80,7 +81,7 @@ function App() {
             ))}
           </div>
           <div className="button-group">
-            {MODELS.map((item, index) => (
+            {(target === "Task 1: Absolute Score" || target === "Task 2: Pairwise Comparison") && MODELS.map((item, index) => (
               <button
                 key={item}
                 className={`menu-button ${
@@ -102,6 +103,7 @@ function App() {
             ))}
           </div>
         </div>
+        {target === "Introduction" && <IntroductionPage />}
         {target === "Task 1: Absolute Score" && <AbsoluteScore />}
         {target === "Task 2: Pairwise Comparison" && <Comparison />}
       </div>

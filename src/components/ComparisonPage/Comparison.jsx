@@ -10,7 +10,7 @@ const Comparison = () => {
   const bin = UserStore((state) => state.bin);
   const setBin = UserStore((state) => state.setBin);
   const currentModelPair = UserStore((state) => state.currentModelPair);
-  const [predictionFilter, setPredictionFilter] = useState("All");
+  const [predictionFilter, setPredictionFilter] = useState("Wrong");
   const [samenessFilter, setSamenessFilter] = useState("All");
 
   const getAccuracyData = (modelName) => {
