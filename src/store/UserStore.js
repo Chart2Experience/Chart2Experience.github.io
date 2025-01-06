@@ -7,7 +7,7 @@ export const SORTS_PAIR = ["All", "int", "mem", "tru", "emp", "aes", "itt", "cft
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS_FULL = ["Interest", "Memorability", "Trustworthiness", "Empathy", "Aesthetic Pleasure", "Intuitiveness", "Comfort"]
 export const CATS_WHY = ["int-why", "mem-why", "tru-why", "emp-why", "aes-why", "itt-why", "cft-why"]
-export const MODELS = ["Human", "GPT4o", "Llama3.2 Vision Instruct", "Sonnet 3.5 (1)", "Sonnet 3.5 (2)"]
+export const MODELS = ["Human", "GPT4o", "Llama3.2 Vision Instruct", "Sonnet 3.5"]
 
 export const UserStore = create((set, get) => ({
   // Target
@@ -54,8 +54,7 @@ export const UserStore = create((set, get) => ({
   setCurrentModelPair: (model) => set({ currentModelPair: model }),
 
   // Score data states
-  sonnetScores1: null,
-  sonnetScores2: null, 
+  sonnetScores: null,
   llamaScores: null,
   gpt4Scores: null,
 
@@ -64,8 +63,7 @@ export const UserStore = create((set, get) => ({
   loadError: null,
 
   // Setters
-  setSonnetScores1: (scores) => set({ sonnetScores1: scores }),
-  setSonnetScores2: (scores) => set({ sonnetScores2: scores }),
+  setSonnetScores: (scores) => set({ sonnetScores: scores }),
   setLlamaScores: (scores) => set({ llamaScores: scores }),
   setGpt4Scores: (scores) => set({ gpt4Scores: scores }),
   setIsLoadingScores: (loading) => set({ isLoadingScores: loading }),
@@ -79,14 +77,13 @@ export const UserStore = create((set, get) => ({
 
     try {
       // Load all score files in parallel
-      const [sonnet1Data, sonnet2Data, llamaData, gpt4Data] = await Promise.all([
-        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_sonnet_36_1.csv').then(res => res.text()),
-        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_sonnet_36_2.csv').then(res => res.text()),
-        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_llama_216.csv').then(res => res.text()),
-        fetch('https://raw.githubusercontent.com/Chart2Emotion/Chart2Emotion.github.io/refs/heads/main/public/data/scores_GPT4o_36.csv').then(res => res.text())
+      const [sonnetData, llamaData, gpt4Data] = await Promise.all([
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_sonnet_36.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_llama_216.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_GPT4o_36.csv').then(res => res.text())
       ]);
 
-      // console.log(sonnet1Data, sonnet2Data, llamaData, gpt4Data);
+      // console.log(sonnetData, llamaData, gpt4Data);
 
       // Parse CSV data
       const parseCSV = (csvText) => {
@@ -102,9 +99,7 @@ export const UserStore = create((set, get) => ({
       };
 
       // Set parsed data to store
-      store.setSonnetScores1(parseCSV(sonnet1Data));
-      console.log(store.sonnetScores1);
-      store.setSonnetScores2(parseCSV(sonnet2Data));
+      store.setSonnetScores(parseCSV(sonnetData));
       store.setLlamaScores(parseCSV(llamaData));
       store.setGpt4Scores(parseCSV(gpt4Data));
 
@@ -132,8 +127,7 @@ export const UserStore = create((set, get) => ({
     const models = {
       'GPT4o': 'GPT4o_36', 
       'Llama3.2 Vision Instruct': 'llama_216', 
-      'Sonnet 3.5 (1)': 'sonnet_36_1', 
-      'Sonnet 3.5 (2)': 'sonnet_36_2',
+      'Sonnet 3.5': 'sonnet_36_1', 
       'Human': 'Human'
     }
     const store = get();
@@ -162,8 +156,7 @@ export const UserStore = create((set, get) => ({
   getAllScores: () => {
     const store = get();
     return {
-      sonnet_1: store.sonnetScores1,
-      sonnet_2: store.sonnetScores2,
+      sonnet: store.sonnetScores,
       llama: store.llamaScores,
       gpt4: store.gpt4Scores
     };
@@ -172,10 +165,8 @@ export const UserStore = create((set, get) => ({
   getScoresByModel: (model) => {
     const store = get();
     switch(model) {
-      case 'sonnet_1':
-        return store.sonnetScores1;
-      case 'sonnet_2':
-        return store.sonnetScores2;
+      case 'sonnet':
+        return store.sonnetScores;
       case 'llama_32_11B':
         return store.llamaScores;
       case 'gpt-4o':
@@ -189,8 +180,7 @@ export const UserStore = create((set, get) => ({
   areScoresLoaded: () => {
     const store = get();
     return !!(
-      store.sonnetScores1 && 
-      store.sonnetScores2 && 
+      store.sonnetScores && 
       store.llamaScores && 
       store.gpt4Scores
     );

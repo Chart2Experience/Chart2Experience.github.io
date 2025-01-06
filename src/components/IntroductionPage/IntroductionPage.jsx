@@ -19,23 +19,19 @@ const IntroductionPage = () => {
         <table>
           <tr>
             <td>Task 1 - <a href="/data/240826_total_1296_0.csv" download>Human</a></td>
-            <td></td>
+            <td>&nbsp;</td>
           </tr>
           <tr>
             <td>Task 1 - <a href="/data/scores_GPT4o_36.csv" download>GPT-4o</a></td>
-            <td>Task 2 - <a href="/data/accuracy_GPT4o.csv" download>GPT-4o</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_GPT4o.csv" download>GPT-4o</a></td>
           </tr>
           <tr>
-            <td>Task 1 - <a href="/data/scores_llama_216.csv" download>Llama 3.2 Vision Instruct</a></td>
-            <td>Task 2 - <a href="/data/accuracy_llama.csv" download>Llama 3.2 Vision Instruct</a></td>
+            <td>Task 1 - <a href="/data/scores_llama_216.csv" download>Llama-3.2-Vision-Instruct</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_llama.csv" download>Llama-3.2-Vision-Instruct</a></td>
           </tr>
           <tr>
-            <td>Task 1 - <a href="/data/scores_sonnet_36_1.csv" download>Claude 3.5 Sonnet</a> (the first trial)</td>
-            <td>Task 2 - <a href="/data/accuracy_sonnet_1.csv" download>Claude 3.5 Sonnet</a> (the first trial)</td>
-          </tr>
-          <tr>
-            <td>Task 1 - <a href="/data/scores_sonnet_36_2.csv" download>Claude 3.5 Sonnet</a> (the second trial)</td>
-            <td>Task 2 - <a href="/data/accuracy_sonnet_2.csv" download>Claude 3.5 Sonnet</a> (the second trial)</td>
+            <td>Task 1 - <a href="/data/scores_sonnet_36_1.csv" download>Claude 3.5 Sonnet</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_sonnet_1.csv" download>Claude 3.5 Sonnet</a></td>
           </tr>
         </table>
       </div>
@@ -70,7 +66,7 @@ const IntroductionPage = () => {
             Persona 9: A social media influencer constantly exploring new platforms and features to engage with their growing audience.<br/>
           </div>
         </div>
-        Using these generated personas, we iteratively called MLLMs using the prompt below. We grouped them so that each call is consist of multiple personas and charts. However, we only used a single image with LLama 3.2 Vision Instruct model due to its technical limitation.
+        Using these generated personas, we iteratively called MLLMs using the prompt below.
         <div className="prompt-box">
           <div className="prompt-box-title">Prompt for the Task 1 (Scoring in Likert Scale)</div>
           <div className="prompt-box-text">

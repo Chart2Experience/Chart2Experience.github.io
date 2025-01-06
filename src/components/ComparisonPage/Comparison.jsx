@@ -18,10 +18,8 @@ const Comparison = () => {
       return ACCURACY_CASES['GPT4o'];
     } else if (modelName === "Llama3.2 Vision Instruct") {
       return ACCURACY_CASES['llama'];
-    } else if (modelName === "Sonnet 3.5 (1)") {
+    } else if (modelName === "Sonnet 3.5") {
       return ACCURACY_CASES['sonnet_1'];
-    } else if (modelName === "Sonnet 3.5 (2)") {
-      return ACCURACY_CASES['sonnet_2'];
     }
   }
 
@@ -93,9 +91,7 @@ const Comparison = () => {
       return ACCURACY_CASES['llama'][attributePair][bin]['cases']
     } else if (modelName === "Sonnet 3.5 (1)") {
       return ACCURACY_CASES['sonnet_1'][attributePair][bin]['cases']
-    } else if (modelName === "Sonnet 3.5 (2)") {
-      return ACCURACY_CASES['sonnet_2'][attributePair][bin]['cases']
-    } else {
+    }else {
       return ACCURACY_CASES[modelName][attributePair][bin]['cases']
     }
   }
