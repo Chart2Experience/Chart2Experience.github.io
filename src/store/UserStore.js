@@ -7,7 +7,7 @@ export const SORTS_PAIR = ["All", "int", "mem", "tru", "emp", "aes", "itt", "cft
 export const CATS = ["int", "mem", "tru", "emp", "aes", "itt", "cft"]
 export const CATS_FULL = ["Interest", "Memorability", "Trustworthiness", "Empathy", "Aesthetic Pleasure", "Intuitiveness", "Comfort"]
 export const CATS_WHY = ["int-why", "mem-why", "tru-why", "emp-why", "aes-why", "itt-why", "cft-why"]
-export const MODELS = ["Human", "GPT4o", "Llama3.2 Vision Instruct", "Sonnet 3.5"]
+export const MODELS = ["Human", "GPT-4o", "Llama-3.2-Vision-Instruct", "Claude 3.5 Sonnet"]
 
 export const UserStore = create((set, get) => ({
   // Target
@@ -50,22 +50,22 @@ export const UserStore = create((set, get) => ({
   currentModelAbs: "Human",
   setCurrentModelAbs: (model) => set({ currentModelAbs: model }),
 
-  currentModelPair: "GPT4o",
+  currentModelPair: "GPT-4o",
   setCurrentModelPair: (model) => set({ currentModelPair: model }),
 
   // Score data states
-  sonnetScores: null,
+  claudeScores: null,
   llamaScores: null,
-  gpt4Scores: null,
+  gptScores: null,
 
   // Loading states
   isLoadingScores: false,
   loadError: null,
 
   // Setters
-  setSonnetScores: (scores) => set({ sonnetScores: scores }),
+  setClaudeScores: (scores) => set({ claudeScores: scores }),
   setLlamaScores: (scores) => set({ llamaScores: scores }),
-  setGpt4Scores: (scores) => set({ gpt4Scores: scores }),
+  setGptScores: (scores) => set({ gptScores: scores }),
   setIsLoadingScores: (loading) => set({ isLoadingScores: loading }),
   setLoadError: (error) => set({ loadError: error }),
 
@@ -77,13 +77,13 @@ export const UserStore = create((set, get) => ({
 
     try {
       // Load all score files in parallel
-      const [sonnetData, llamaData, gpt4Data] = await Promise.all([
-        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_sonnet_36.csv').then(res => res.text()),
-        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_llama_216.csv').then(res => res.text()),
-        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_GPT4o_36.csv').then(res => res.text())
+      const [claudeData, llamaData, gptData] = await Promise.all([
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_Claude_35.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_Llama_32.csv').then(res => res.text()),
+        fetch('https://raw.githubusercontent.com/Chart2Experience/Chart2Experience.github.io/refs/heads/main/public/data/scores_GPT_4o.csv').then(res => res.text())
       ]);
 
-      // console.log(sonnetData, llamaData, gpt4Data);
+      // console.log(claudeData, llamaData, gptData);
 
       // Parse CSV data
       const parseCSV = (csvText) => {
@@ -99,9 +99,9 @@ export const UserStore = create((set, get) => ({
       };
 
       // Set parsed data to store
-      store.setSonnetScores(parseCSV(sonnetData));
+      store.setClaudeScores(parseCSV(claudeData));
       store.setLlamaScores(parseCSV(llamaData));
-      store.setGpt4Scores(parseCSV(gpt4Data));
+      store.setGptScores(parseCSV(gptData));
 
     } catch (error) {
       store.setLoadError(error.message);
@@ -125,9 +125,9 @@ export const UserStore = create((set, get) => ({
 
   loadMeanScoreData: async () => {
     const models = {
-      'GPT4o': 'GPT4o_36', 
-      'Llama3.2 Vision Instruct': 'llama_216', 
-      'Sonnet 3.5': 'sonnet_36_1', 
+      'GPT-4o': 'GPT_4o', 
+      'Llama-3.2-Vision-Instruct': 'Llama_32', 
+      'Claude 3.5 Sonnet': 'Claude_35', 
       'Human': 'Human'
     }
     const store = get();
@@ -152,37 +152,13 @@ export const UserStore = create((set, get) => ({
     ]);
   },
 
-  // Getter functions
-  getAllScores: () => {
-    const store = get();
-    return {
-      sonnet: store.sonnetScores,
-      llama: store.llamaScores,
-      gpt4: store.gpt4Scores
-    };
-  },
-
-  getScoresByModel: (model) => {
-    const store = get();
-    switch(model) {
-      case 'sonnet':
-        return store.sonnetScores;
-      case 'llama_32_11B':
-        return store.llamaScores;
-      case 'gpt-4o':
-        return store.gpt4Scores;
-      default:
-        return null;
-    }
-  },
-
   // Helper function to check if all scores are loaded
   areScoresLoaded: () => {
     const store = get();
     return !!(
-      store.sonnetScores && 
+      store.claudeScores && 
       store.llamaScores && 
-      store.gpt4Scores
+      store.gptScores
     );
   },
 }));

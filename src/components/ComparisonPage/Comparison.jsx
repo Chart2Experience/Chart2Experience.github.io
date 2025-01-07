@@ -13,25 +13,15 @@ const Comparison = () => {
   const [predictionFilter, setPredictionFilter] = useState("Wrong");
   const [samenessFilter, setSamenessFilter] = useState("All");
 
-  const getAccuracyData = (modelName) => {
-    if (modelName === "GPT4o") {
-      return ACCURACY_CASES['GPT4o'];
-    } else if (modelName === "Llama3.2 Vision Instruct") {
-      return ACCURACY_CASES['llama'];
-    } else if (modelName === "Sonnet 3.5") {
-      return ACCURACY_CASES['sonnet_1'];
-    }
-  }
-
   // Prepare data for Plotly line chart
   const plotlyData = useMemo(() => {
     if (attributePair === "default" || currentModelPair === "Human") return [];
 
     const accuracyData = attributePair === "All" 
-      ? Object.keys(getAccuracyData(currentModelPair)).flatMap(att => 
-          getAccuracyData(currentModelPair)[att].map(item => ({ ...item, att: att }))
+      ? Object.keys(ACCURACY_CASES[currentModelPair]).flatMap(att => 
+          ACCURACY_CASES[currentModelPair][att].map(item => ({ ...item, att: att }))
         )
-      : getAccuracyData(currentModelPair)[attributePair];
+      : ACCURACY_CASES[currentModelPair][attributePair];
 
     // If not 'All', return single line as before
     if (attributePair !== "All") {
@@ -84,24 +74,12 @@ const Comparison = () => {
     }
   };
 
-  const getCases = (modelName) => {
-    if (modelName === "GPT4o") {
-      return ACCURACY_CASES['GPT4o'][attributePair][bin]['cases']
-    } else if (modelName === "Llama3.2 Vision Instruct") {
-      return ACCURACY_CASES['llama'][attributePair][bin]['cases']
-    } else if (modelName === "Sonnet 3.5 (1)") {
-      return ACCURACY_CASES['sonnet_1'][attributePair][bin]['cases']
-    }else {
-      return ACCURACY_CASES[modelName][attributePair][bin]['cases']
-    }
-  }
-
   const filteredCases = useMemo(() => {
     if (attributePair === "All" || bin === null) {
       return [];
     }
     
-    return getCases(currentModelPair)
+    return ACCURACY_CASES[currentModelPair][attributePair][bin]['cases']
       .filter(e => {
         const matchesPrediction = predictionFilter === "All" || 
           (predictionFilter === "Correct" && e[3]) ||

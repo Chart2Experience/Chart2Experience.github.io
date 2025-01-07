@@ -6,15 +6,13 @@ import { UserStore, CATS, CATS_FULL } from "../../store/UserStore.js";
 import { getAVGofFactors, getCountinFactor, getWHYofFactors } from "../../utils/dataWrangling.jsx";
 import ChartSelector from './ChartSelector.jsx';
 
-const MODELS = ["Human", "GPT4o", "llama", "sonnet_1"];
-
 const AbsoluteScore = () => {
   const currentImage = UserStore((state) => state.currentImage);
   const loaded = UserStore((state) => state.loaded);
-  // read sonnetScores, llamaScores, gpt4Scores from UserStore
-  const sonnetScores = UserStore((state) => state.sonnetScores);
+  
+  const claudeScores = UserStore((state) => state.claudeScores);
   const llamaScores = UserStore((state) => state.llamaScores);
-  const gpt4Scores = UserStore((state) => state.gpt4Scores);
+  const gptScores = UserStore((state) => state.gptScores);
 
   const currentFactor = UserStore((state) => state.currentFactor);
   const setCurrentFactor = UserStore((state) => state.setCurrentFactor);
@@ -56,12 +54,12 @@ const AbsoluteScore = () => {
   const getScores = (modelName) => {
     if (modelName === "Human") {
       return loaded;
-    } else if (modelName === "GPT4o") {
-      return gpt4Scores;
-    } else if (modelName === "Llama3.2 Vision Instruct") {
+    } else if (modelName === "GPT-4o") {
+      return gptScores;
+    } else if (modelName === "Llama-3.2-Vision-Instruct") {
       return llamaScores;
-    } else if (modelName === "Sonnet 3.5") {
-      return sonnetScores;
+    } else if (modelName === "Claude 3.5 Sonnet") {
+      return claudeScores;
     }
   }
 

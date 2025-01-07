@@ -22,16 +22,16 @@ const IntroductionPage = () => {
             <td>&nbsp;</td>
           </tr>
           <tr>
-            <td>Task 1 - <a href="/data/scores_GPT4o_36.csv" download>GPT-4o</a></td>
-            <td>&nbsp;Task 2 - <a href="/data/accuracy_GPT4o.csv" download>GPT-4o</a></td>
+            <td>Task 1 - <a href="/data/scores_GPT_4o.csv" download>GPT-4o</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_GPT_4o.csv" download>GPT-4o</a></td>
           </tr>
           <tr>
-            <td>Task 1 - <a href="/data/scores_llama_216.csv" download>Llama-3.2-Vision-Instruct</a></td>
-            <td>&nbsp;Task 2 - <a href="/data/accuracy_llama.csv" download>Llama-3.2-Vision-Instruct</a></td>
+            <td>Task 1 - <a href="/data/scores_Llama_32.csv" download>Llama-3.2-Vision-Instruct</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_Llama_32.csv" download>Llama-3.2-Vision-Instruct</a></td>
           </tr>
           <tr>
-            <td>Task 1 - <a href="/data/scores_sonnet_36_1.csv" download>Claude 3.5 Sonnet</a></td>
-            <td>&nbsp;Task 2 - <a href="/data/accuracy_sonnet_1.csv" download>Claude 3.5 Sonnet</a></td>
+            <td>Task 1 - <a href="/data/scores_Claude_35.csv" download>Claude 3.5 Sonnet</a></td>
+            <td>&nbsp;Task 2 - <a href="/data/accuracy_Claude_35.csv" download>Claude 3.5 Sonnet</a></td>
           </tr>
         </table>
       </div>
@@ -39,7 +39,7 @@ const IntroductionPage = () => {
       <div className="prompts">
         <h2>Prompt Examples</h2>
         <h3>Task 1: Score Prediction</h3>
-        Before prompting MLLMs to score using the Likert scale (Task 1), to prevent them from generating repetitive results for the same chart and to ensure that there is no significant disparity with the actual crowdsourced study environment, we created 216 virtual different personas.
+        Before prompting MLLMs to score using the Likert scale (Task 1), we generated 216 unique personas to simulate the variability inherent in human responses.
         <div className="prompt-box">
           <div className="prompt-box-title">Prompt for Generating 216 Different Personas</div>
           <div className="prompt-box-text">
@@ -52,7 +52,7 @@ const IntroductionPage = () => {
           </div>
         </div>
         <div className="prompt-box">
-          <div className="prompt-box-title">Persona Examples (N=10)</div>
+          <div className="prompt-box-title">Persona Examples</div>
           <div className="prompt-box-text">
             Persona 0: A tech-savvy college student majoring in computer science who is always on the lookout for the latest gadgets and software updates.<br/>
             Persona 1: A middle-aged marketing executive who relies heavily on digital tools for work but struggles to keep up with rapidly changing technology.<br/>
